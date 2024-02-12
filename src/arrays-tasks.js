@@ -525,7 +525,27 @@ function findCommonElements(arr1, arr2) {
  *    findLongestIncreasingSubsequence([3, 10, 2, 1, 20]) => 2
  *    findLongestIncreasingSubsequence([50, 3, 10, 7, 40, 80]) => 3
  */
-function findLongestIncreasingSubsequence(/* nums */) {}
+function findLongestIncreasingSubsequence(nums) {
+  const maxLength = nums.reduce((acc, elem, index, arr) => {
+    let currentLength = 0;
+    let prevEl = arr[0];
+    let localMax = acc; // Store the local maximum
+
+    for (let i = 1; i <= index; i += 1) {
+      const currentEl = arr[i];
+      if (currentEl > prevEl) {
+        currentLength += 1;
+        localMax = Math.max(localMax, currentLength);
+      } else {
+        currentLength = 0;
+      }
+      prevEl = currentEl;
+    }
+    return localMax; // Return the local maximum
+  }, 0);
+
+  return maxLength + 1;
+}
 
 /**
  * Propagates every item in sequence its position times
@@ -611,15 +631,17 @@ function sortDigitNamesByNumericOrder(arr) {
  *
  */
 function swapHeadAndTail(arr) {
-  if (arr.length <= 1) {
-    return arr;
-  }
+  if (arr.length < 2) return arr;
 
-  const midpoint = Math.floor(arr.length / 2);
-  const head = arr.slice(0, midpoint);
-  const tail = arr.slice(midpoint);
+  const array = [...arr];
 
-  return tail.concat(head);
+  const middle = Math.floor(arr.length / 2);
+  const head = array.splice(0, middle);
+  const tail = array.splice(-middle);
+
+  return arr.length % 2 === 1
+    ? [...tail, arr[middle], ...head]
+    : [...tail, ...head];
 }
 
 module.exports = {
